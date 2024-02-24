@@ -55,7 +55,7 @@ func NewCLIConfig(name, version, author, date string) (*CLIConfig, error) {
 	}
 
 	base := viper.GetString("baseurl")
-	client, err := musclemem.NewClient(base, "")
+	client, err := musclemem.NewClient(base, "TODO")
 	if err != nil {
 		return nil, err
 	}

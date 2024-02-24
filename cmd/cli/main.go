@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/scrot/musclemem-api/internal/cli"
-	command "github.com/scrot/musclemem-api/internal/command/root"
+	"github.com/scrot/musclemem-cli/cli"
+	command "github.com/scrot/musclemem-cli/command/root"
 )
 
 var (
@@ -38,6 +38,7 @@ func mainRun() cli.ExitCode {
 
 	config, err := cli.NewCLIConfig(name, version, author, date)
 	if err != nil {
+		fmt.Println(err)
 		return cli.ExitError
 	}
 

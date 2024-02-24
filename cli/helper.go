@@ -64,3 +64,11 @@ func NewSimpleTable(c *CLIConfig) *tablewriter.Table {
 	t.SetTablePadding("  ")
 	return t
 }
+
+func ParseExerciseRef(s string) (int, int, error) {
+	var w, e int
+	if _, err := fmt.Sscanf(s, "%d/%d", &w, &e); err != nil {
+		return 0, 0, err
+	}
+	return w, e, nil
+}

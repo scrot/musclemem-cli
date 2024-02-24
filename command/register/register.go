@@ -1,18 +1,17 @@
 package register
 
 import (
-	"context"
 	"encoding/json"
 	"os"
 
 	"github.com/MakeNowJust/heredoc/v2"
-	"github.com/scrot/musclemem-api/internal/cli"
-	"github.com/scrot/musclemem-api/internal/user"
+	"github.com/scrot/go-musclemem"
+	"github.com/scrot/musclemem-cli/cli"
 	"github.com/spf13/cobra"
 )
 
 type RegisterOptions struct {
-	User user.User
+	User musclemem.User
 
 	UserFilePath string
 }
@@ -29,7 +28,7 @@ func NewRegisterCmd(c *cli.CLIConfig) *cobra.Command {
       $ mm register -f /path/to/user.json
       $ mm register --username anna --email anna@email.com --password passwd
     `),
-		RunE: func(_ *cobra.Command, _ []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			if opts.UserFilePath != "" {
 				file, err := os.Open(opts.UserFilePath)
 				if err != nil {
@@ -42,7 +41,7 @@ func NewRegisterCmd(c *cli.CLIConfig) *cobra.Command {
 				}
 			}
 
-			if _, _, err := c.Users.Register(context.TODO(), opts.User); err != nil {
+			if _, _, err := c.Client.Users.Register(cmd.Context(), &opts.User); err != nil {
 				return cli.NewAPIError(err)
 			}
 

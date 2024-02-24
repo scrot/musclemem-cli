@@ -1,17 +1,17 @@
 package command
 
 import (
-	"github.com/scrot/musclemem-api/internal/cli"
-	"github.com/scrot/musclemem-api/internal/command/add"
-	"github.com/scrot/musclemem-api/internal/command/edit"
-	"github.com/scrot/musclemem-api/internal/command/info"
-	ini "github.com/scrot/musclemem-api/internal/command/init"
-	"github.com/scrot/musclemem-api/internal/command/list"
-	"github.com/scrot/musclemem-api/internal/command/login"
-	"github.com/scrot/musclemem-api/internal/command/logout"
-	"github.com/scrot/musclemem-api/internal/command/move"
-	"github.com/scrot/musclemem-api/internal/command/register"
-	"github.com/scrot/musclemem-api/internal/command/remove"
+	"github.com/scrot/musclemem-cli/cli"
+	"github.com/scrot/musclemem-cli/command/add"
+	"github.com/scrot/musclemem-cli/command/edit"
+	"github.com/scrot/musclemem-cli/command/info"
+	ini "github.com/scrot/musclemem-cli/command/init"
+	"github.com/scrot/musclemem-cli/command/list"
+	"github.com/scrot/musclemem-cli/command/login"
+	"github.com/scrot/musclemem-cli/command/logout"
+	"github.com/scrot/musclemem-cli/command/move"
+	"github.com/scrot/musclemem-cli/command/register"
+	"github.com/scrot/musclemem-cli/command/remove"
 
 	"github.com/MakeNowJust/heredoc/v2"
 	"github.com/spf13/cobra"

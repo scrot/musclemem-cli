@@ -1,11 +1,10 @@
 package list
 
 import (
-	"context"
 	"strconv"
 
 	"github.com/MakeNowJust/heredoc/v2"
-	"github.com/scrot/musclemem-api/internal/cli"
+	"github.com/scrot/musclemem-cli/cli"
 	"github.com/spf13/cobra"
 )
 
@@ -21,15 +20,15 @@ func ListWorkoutCmd(c *cli.CLIConfig) *cobra.Command {
       $ mm list workout
     `),
 		Args: cobra.NoArgs,
-		RunE: func(_ *cobra.Command, _ []string) error {
-			ws, _, err := c.Workouts.List(context.TODO(), c.User)
+		RunE: func(cmd *cobra.Command, _ []string) error {
+			ws, _, err := c.Client.Workouts.List(cmd.Context(), c.User)
 			if err != nil {
 				return cli.NewAPIError(err)
 			}
 
 			t := cli.NewSimpleTable(c)
 			t.SetHeader([]string{"#", "NAME"})
-			for _, w := range ws {
+			for _, w := range *ws {
 				t.Append([]string{strconv.Itoa(w.Index), w.Name})
 			}
 			t.Render()

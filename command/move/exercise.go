@@ -1,11 +1,11 @@
 package move
 
 import (
-	"context"
+	"errors"
 
 	"github.com/MakeNowJust/heredoc/v2"
-	"github.com/scrot/musclemem-api/internal/cli"
-	"github.com/scrot/musclemem-api/internal/exercise"
+	"github.com/scrot/go-musclemem"
+	"github.com/scrot/musclemem-cli/cli"
 	"github.com/spf13/cobra"
 )
 
@@ -41,13 +41,15 @@ func NewMoveExerciseDownCmd(c *cli.CLIConfig) *cobra.Command {
       $ mm move exercise down 1/2
     `),
 		Args: cobra.ExactArgs(1),
-		RunE: func(_ *cobra.Command, args []string) error {
-			ref, err := exercise.ParseRef(c.User + "/" + args[0])
+		RunE: func(cmd *cobra.Command, args []string) error {
+			wi, ei, err := cli.ParseExerciseRef(args[0])
 			if err != nil {
 				return cli.NewCLIError(err)
 			}
 
-			c.Exercises.Move(context.TODO(), ref, exercise.MoveDown, nil)
+			if _, err := c.Client.Exercises.Move(cmd.Context(), c.User, wi, ei, musclemem.MoveDown, nil); err != nil {
+				return cli.NewAPIError(err)
+			}
 
 			return nil
 		},
@@ -66,13 +68,15 @@ func NewMoveExerciseUpCmd(c *cli.CLIConfig) *cobra.Command {
       $ mm move exercise up 1/2
     `),
 		Args: cobra.ExactArgs(1),
-		RunE: func(_ *cobra.Command, args []string) error {
-			ref, err := exercise.ParseRef(c.User + "/" + args[0])
+		RunE: func(cmd *cobra.Command, args []string) error {
+			wi, ei, err := cli.ParseExerciseRef(args[0])
 			if err != nil {
 				return cli.NewCLIError(err)
 			}
 
-			c.Exercises.Move(context.TODO(), ref, exercise.MoveUp, nil)
+			if _, err := c.Client.Exercises.Move(cmd.Context(), c.User, wi, ei, musclemem.MoveUp, nil); err != nil {
+				return cli.NewAPIError(err)
+			}
 
 			return nil
 		},
@@ -92,18 +96,22 @@ func NewMoveExerciseSwapCmd(c *cli.CLIConfig) *cobra.Command {
       $ mm move exercise swap 1/2 1/3
     `),
 		Args: cobra.ExactArgs(2),
-		RunE: func(_ *cobra.Command, args []string) error {
-			ref, err := exercise.ParseRef(c.User + "/" + args[0])
+		RunE: func(cmd *cobra.Command, args []string) error {
+			wi, ei, err := cli.ParseExerciseRef(args[0])
 			if err != nil {
 				return cli.NewCLIError(err)
 			}
 
-			with, err := exercise.ParseRef(c.User + "/" + args[1])
+			wi2, ei2, err := cli.ParseExerciseRef(args[1])
 			if err != nil {
 				return cli.NewCLIError(err)
 			}
 
-			if _, err := c.Exercises.Move(context.TODO(), ref, exercise.MoveSwap, &with); err != nil {
+			if wi != wi2 {
+				return cli.NewCLIError(errors.New("only exercises within same workout allowed"))
+			}
+
+			if _, err := c.Client.Exercises.Move(cmd.Context(), c.User, wi, ei, musclemem.MoveSwap, &ei2); err != nil {
 				return cli.NewAPIError(err)
 			}
 

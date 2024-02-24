@@ -3,7 +3,7 @@ package register
 import (
 	"testing"
 
-	"github.com/scrot/musclemem-api/internal/cli"
+	"github.com/scrot/musclemem-cli/cli"
 )
 
 func TestRegister(t *testing.T) {

@@ -1,17 +1,16 @@
 package edit
 
 import (
-	"context"
 	"errors"
 
 	"github.com/MakeNowJust/heredoc/v2"
-	"github.com/scrot/musclemem-api/internal/cli"
-	"github.com/scrot/musclemem-api/internal/exercise"
+	"github.com/scrot/go-musclemem"
+	"github.com/scrot/musclemem-cli/cli"
 	"github.com/spf13/cobra"
 )
 
 type EditExerciseOptions struct {
-	exercise.Exercise
+	musclemem.Exercise
 }
 
 func NewEditExerciseCmd(c *cli.CLIConfig) *cobra.Command {
@@ -29,21 +28,19 @@ func NewEditExerciseCmd(c *cli.CLIConfig) *cobra.Command {
       $ mm edit exercise 1/2 --weight 40.5 --reps 15 
     `),
 		Args: cobra.ExactArgs(1),
-		RunE: func(_ *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			if opts.Name == "" &&
 				opts.Weight == 0 &&
 				opts.Repetitions == 0 {
 				return cli.NewCLIError(errors.New("missing flags"))
 			}
 
-			ref, err := exercise.ParseRef(c.User + "/" + args[0])
+			wi, ei, err := cli.ParseExerciseRef(args[0])
 			if err != nil {
 				return cli.NewCLIError(err)
 			}
 
-			patch := opts.Exercise
-
-			if _, _, err := c.Exercises.Update(context.TODO(), ref, patch); err != nil {
+			if _, _, err := c.Client.Exercises.Update(cmd.Context(), c.User, wi, ei, opts.Exercise); err != nil {
 				return cli.NewAPIError(err)
 			}
 

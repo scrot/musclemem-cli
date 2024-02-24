@@ -1,11 +1,8 @@
 package remove
 
 import (
-	"context"
-
 	"github.com/MakeNowJust/heredoc/v2"
-	"github.com/scrot/musclemem-api/internal/cli"
-	"github.com/scrot/musclemem-api/internal/exercise"
+	"github.com/scrot/musclemem-cli/cli"
 	"github.com/spf13/cobra"
 )
 
@@ -21,13 +18,13 @@ func NewRemoveExerciseCmd(c *cli.CLIConfig) *cobra.Command {
       $ mm remove exercise 1/2
     `),
 		Args: cobra.ExactArgs(1),
-		RunE: func(_ *cobra.Command, args []string) error {
-			ref, err := exercise.ParseRef(c.User + "/" + args[0])
+		RunE: func(cmd *cobra.Command, args []string) error {
+			wi, ei, err := cli.ParseExerciseRef(args[0])
 			if err != nil {
 				return cli.NewCLIError(err)
 			}
 
-			if _, err := c.Exercises.Delete(context.TODO(), ref); err != nil {
+			if _, _, err := c.Client.Exercises.Delete(cmd.Context(), c.User, wi, ei); err != nil {
 				return cli.NewAPIError(err)
 			}
 

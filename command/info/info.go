@@ -3,7 +3,7 @@ package info
 import (
 	"fmt"
 
-	"github.com/scrot/musclemem-api/internal/cli"
+	"github.com/scrot/musclemem-cli/cli"
 	"github.com/spf13/cobra"
 )
 
